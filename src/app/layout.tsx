@@ -1,9 +1,6 @@
 import './styles/globals.css'
 import type { Metadata } from 'next'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
-import FloatingSocials from '@/components/FloatingSocials'
-import CountdownBanner from '@/components/CountdownBanner'
+import LayoutWrapper from '@/components/LayoutWrapper'
 
 export const metadata: Metadata = {
   title: 'OneStore',
@@ -18,11 +15,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className="bg-gray-100">
-        <Navbar />
-        <CountdownBanner />
-        {children}
-        <Footer />
-        <FloatingSocials />
+        <LayoutWrapper>{children}</LayoutWrapper>
       </body>
     </html>
   )
