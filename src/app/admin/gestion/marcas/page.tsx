@@ -1,55 +1,66 @@
-// src/app/admin/gestion/categorias/page.tsx
+// src/app/admin/gestion/marcas/page.tsx
 
 'use client'
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { API } from '@/lib/api'
-import fetchData from '@/lib/fetchData'
-import { Categoria } from '@/types'
 
-export default function GestionCategorias() {
-  const [categorias, setCategorias] = useState<Categoria[]>([])
+type Marca = {
+  id: string
+  name: string
+  status: 'activo' | 'inactivo'
+}
+
+export default function GestionMarcas() {
+  const [marcas, setMarcas] = useState<Marca[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchCategorias = async () => {
+  const fetchMarcas = async () => {
     const token = localStorage.getItem('token')
     try {
-      const data = await fetchData(API.CATEGORIAS, token || '')
-      setCategorias(data)
+      const res = await fetch(API.MARCAS_ALL, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (!res.ok) throw new Error('Error al cargar las marcas')
+      const data = await res.json()
+      setMarcas(data)
     } catch (err) {
-      setError('No se pudieron cargar las categorías.')
+      setError('No se pudieron cargar las marcas.')
     } finally {
       setLoading(false)
     }
   }
 
   useEffect(() => {
-    fetchCategorias()
+    fetchMarcas()
   }, [])
 
   const handleEliminar = async (id: string) => {
     const token = localStorage.getItem('token')
-    if (!confirm('¿Estás seguro de que quieres desactivar esta categoría?')) return
-    await fetchData(API.CATEGORIA_BY_ID(id), token || '')
-    fetchCategorias()
+    if (!confirm('¿Estás seguro de que quieres desactivar esta marca?')) return
+    await fetch(API.MARCA_BY_ID(id), {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    fetchMarcas()
   }
 
   return (
-    <div>
+    <div className="bg-gray-800 text-white p-6 rounded-md shadow-md">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Categorías</h1>
+        <h1 className="text-2xl font-bold">Marcas</h1>
         <Link
-          href="/admin/categorias/new"
+          href="/admin/gestion/marcas/new"
           className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700 transition"
         >
-          + Nueva Categoría
+          + Nueva Marca
         </Link>
       </div>
 
       {loading ? (
-        <p className="text-center text-gray-600">Cargando categorías...</p>
+        <p className="text-center text-gray-400">Cargando marcas...</p>
       ) : error ? (
         <p className="text-red-500 text-center">{error}</p>
       ) : (
@@ -62,29 +73,29 @@ export default function GestionCategorias() {
             </tr>
           </thead>
           <tbody>
-            {categorias.map((c) => (
-              <tr key={c.id} className="border-t">
-                <td className="p-3 text-gray-700">{c.name}</td>
+            {marcas.map((m) => (
+              <tr key={m.id} className="border-t">
+                <td className="p-3 text-gray-700">{m.name}</td>
                 <td className="p-3">
                   <span
                     className={`px-2 py-1 rounded-full text-xs ${
-                      c.status === 'activo'
+                      m.status === 'activo'
                         ? 'bg-green-200 text-green-800'
                         : 'bg-gray-400 text-gray-800'
                     }`}
                   >
-                    {c.status}
+                    {m.status}
                   </span>
                 </td>
                 <td className="p-3 text-right space-x-2">
                   <Link
-                    href={`/admin/categorias/${c.id}/edit`}
+                    href={`/admin/marcas/${m.id}/edit`}
                     className="text-blue-500 hover:underline"
                   >
                     Editar
                   </Link>
                   <button
-                    onClick={() => handleEliminar(c.id)}
+                    onClick={() => handleEliminar(m.id)}
                     className="text-red-500 hover:underline"
                   >
                     Eliminar
