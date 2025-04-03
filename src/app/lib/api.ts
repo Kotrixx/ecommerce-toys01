@@ -3,6 +3,7 @@
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/v1.0';
 
 export const API = {
+  PRODUCTS_ALL: `${BASE_URL}/products/all`,
   PRODUCTS: `${BASE_URL}/products`,
   PRODUCT_BY_ID: (id: string) => `${BASE_URL}/products/${id}`,
   CATEGORIES_AND_BRANDS: `${BASE_URL}/opciones/productos`,

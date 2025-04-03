@@ -22,7 +22,7 @@ export default function ListaProductos() {
     const token = localStorage.getItem('token')
     const limit = 8
 
-    fetch(`http://localhost:8000/v1.0/products?page=${page}&limit=${limit}`, {
+    fetch(`http://localhost:8000/v1.0/products/all?page=${page}&limit=${limit}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(async (res) => {
@@ -30,18 +30,15 @@ export default function ListaProductos() {
         return res.json()
       })
       .then((data) => {
-        const productosAdaptados = data.items.map((p: any) => ({
-          id: p._id || p.id,
+        const productosAdaptados = data.products.map((p: any) => ({
+          id: p.id,
           nombre: p.name,
-          precio: parseFloat(p.price),
-          oferta:
-            p.is_offer && p.offer_price
-              ? Math.round((1 - p.offer_price / p.price) * 100)
-              : 0,
-          imagen: p.images?.[0] || '',
+          precio: parseFloat(p.precio),
+          oferta: p.oferta,
+          imagen: p.images || '',
         }))
         setProductos(productosAdaptados)
-        setTotalPages(Math.ceil(data.total / data.limit))
+        setTotalPages(Math.ceil(data.total_products / data.limit))
       })
       .catch((err) => {
         console.error(err)
@@ -134,11 +131,7 @@ export default function ListaProductos() {
                 <button
                   key={num}
                   onClick={() => setPage(num)}
-                  className={`px-4 py-2 text-sm rounded border ${
-                    num === page
-                      ? 'bg-pink-600 text-white'
-                      : 'bg-white hover:bg-gray-100'
-                  }`}
+                  className={`px-4 py-2 text-sm rounded border ${num === page ? 'bg-pink-600 text-white' : 'bg-white hover:bg-gray-100'}`}
                 >
                   {num}
                 </button>
