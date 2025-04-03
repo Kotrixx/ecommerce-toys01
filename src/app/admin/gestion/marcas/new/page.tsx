@@ -1,15 +1,16 @@
-// src/app/admin/gestion/marcas/new.tsx
-
 'use client'
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { API } from '@/lib/api'
+import { Marca } from '@/types'
+import fetchData from '@/lib/fetchData'
 
 export default function CrearMarca() {
-  const [form, setForm] = useState({
-    nombre: '',
-    estado: 'activo',
+  const [form, setForm] = useState<Marca>({
+    id: '',
+    name: '',
+    status: 'activo',
   })
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -23,13 +24,9 @@ export default function CrearMarca() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    setError(null)
 
     const token = localStorage.getItem('token')
-
-    const payload = {
-      name: form.nombre,
-      status: form.estado,
-    }
 
     try {
       const res = await fetch(API.MARCAS, {
@@ -38,7 +35,10 @@ export default function CrearMarca() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          name: form.name,
+          status: form.status,
+        }),
       })
 
       if (res.ok) {
@@ -54,18 +54,18 @@ export default function CrearMarca() {
   }
 
   return (
-    <div className="bg-gray-800 text-white shadow-md rounded p-6 max-w-xl mx-auto mt-10">
-      <h1 className="text-2xl font-bold mb-4 text-pink-600">Crear Nueva Marca</h1>
+    <div className="bg-white text-gray-900 shadow-md rounded p-6 max-w-xl mx-auto mt-10">
+      <h1 className="text-2xl font-bold mb-4 text-gray-700">Crear Nueva Marca</h1>
 
       {error && <div className="text-red-500 mb-4">{error}</div>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <label className="block">
-          <span className="text-sm font-medium">Nombre</span>
+          <span className="text-sm font-medium text-gray-800">Nombre</span>
           <input
             type="text"
-            name="nombre"
-            value={form.nombre}
+            name="name"
+            value={form.name}
             onChange={handleChange}
             required
             className="w-full border px-3 py-2 rounded mt-1"
@@ -73,10 +73,10 @@ export default function CrearMarca() {
         </label>
 
         <label className="block">
-          <span className="text-sm font-medium">Estado</span>
+          <span className="text-sm font-medium text-gray-800">Estado</span>
           <select
-            name="estado"
-            value={form.estado}
+            name="status"
+            value={form.status}
             onChange={handleChange}
             className="w-full border px-3 py-2 rounded mt-1"
           >
@@ -87,7 +87,7 @@ export default function CrearMarca() {
 
         <button
           type="submit"
-          className={`w-full ${loading ? 'bg-pink-300' : 'bg-pink-600 hover:bg-pink-700'} text-white py-2 rounded transition`}
+          className={`w-full ${loading ? 'bg-blue-300' : 'bg-pink-600 hover:bg-pink-700'} text-white py-2 rounded transition`}
           disabled={loading}
         >
           {loading ? 'Guardando...' : 'Guardar Marca'}

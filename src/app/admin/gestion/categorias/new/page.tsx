@@ -80,8 +80,8 @@ export default function CrearCategoria() {
             onChange={handleChange}
             className="w-full border px-3 py-2 rounded mt-1"
           >
-            <option value="activo">Activo</option>
-            <option value="inactivo">Inactivo</option>
+            <option value="active">Activo</option>
+            <option value="inactive">Inactivo</option>
           </select>
         </label>
 

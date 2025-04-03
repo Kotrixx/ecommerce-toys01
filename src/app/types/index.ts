@@ -14,17 +14,17 @@ export type Producto = {
 export type Franquicia = {
   id: string
   name: string
-  status: 'activo' | 'inactivo'
+  status: 'active' | 'inactive'
 }
 
 export type Categoria = {
   id: string
   name: string
-  status: 'activo' | 'inactivo'
+  status: 'active' | 'inactive'
 }
 
 export type Marca = {
   id: string
   name: string
-  status: 'activo' | 'inactivo'
+  status: 'active' | 'inactive'
 }

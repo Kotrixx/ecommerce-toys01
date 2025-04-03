@@ -16,7 +16,7 @@ export default function GestionCategorias() {
   const fetchCategorias = async () => {
     const token = localStorage.getItem('token')
     try {
-      const data = await fetchData(API.CATEGORIAS, token || '')
+      const data = await fetchData(API.CATEGORIAS_ALL, token || '')
       setCategorias(data)
     } catch (err) {
       setError('No se pudieron cargar las categorías.')
@@ -29,17 +29,10 @@ export default function GestionCategorias() {
     fetchCategorias()
   }, [])
 
-  const handleEliminar = async (id: string) => {
-    const token = localStorage.getItem('token')
-    if (!confirm('¿Estás seguro de que quieres desactivar esta categoría?')) return
-    await fetchData(API.CATEGORIA_BY_ID(id), token || '')
-    fetchCategorias()
-  }
-
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Categorías</h1>
+        <h1 className="text-2xl font-bold text-black">Categorías</h1>
         <Link
           href="/admin/categorias/new"
           className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700 transition"
@@ -53,8 +46,8 @@ export default function GestionCategorias() {
       ) : error ? (
         <p className="text-red-500 text-center">{error}</p>
       ) : (
-        <table className="min-w-full bg-white shadow rounded text-sm">
-          <thead className="bg-gray-700 text-left text-white">
+        <table className="min-w-full bg-white shadow-md rounded-lg text-sm">
+          <thead className="bg-gray-700 text-left">
             <tr>
               <th className="p-3">Nombre</th>
               <th className="p-3">Estado</th>
@@ -68,27 +61,20 @@ export default function GestionCategorias() {
                 <td className="p-3">
                   <span
                     className={`px-2 py-1 rounded-full text-xs ${
-                      c.status === 'activo'
-                        ? 'bg-green-200 text-green-800'
-                        : 'bg-gray-400 text-gray-800'
+                      c.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-200 text-gray-700'
                     }`}
                   >
-                    {c.status}
+                    {c.status === 'active' ? 'Activo' : 'Inactivo'}
                   </span>
+
                 </td>
                 <td className="p-3 text-right space-x-2">
                   <Link
-                    href={`/admin/categorias/${c.id}/edit`}
+                    href={`/admin/gestion/categorias/${c.id}`}
                     className="text-blue-500 hover:underline"
                   >
                     Editar
                   </Link>
-                  <button
-                    onClick={() => handleEliminar(c.id)}
-                    className="text-red-500 hover:underline"
-                  >
-                    Eliminar
-                  </button>
                 </td>
               </tr>
             ))}

@@ -1,5 +1,3 @@
-// src/app/admin/gestion/categorias/[id]/edit.tsx
-
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -10,8 +8,8 @@ export default function EditarCategoria() {
   const { id } = useParams() as { id: string }
   const router = useRouter()
   const [form, setForm] = useState({
-    nombre: '',
-    estado: 'activo',
+    name: '',
+    status: 'activo',
   })
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -24,8 +22,8 @@ export default function EditarCategoria() {
       .then(res => res.json())
       .then(data => {
         setForm({
-          nombre: data.name,
-          estado: data.status,
+          name: data.name,
+          status: data.status,
         })
       })
       .catch(() => setError('Error al cargar la categoría.'))
@@ -44,8 +42,8 @@ export default function EditarCategoria() {
     const token = localStorage.getItem('token')
 
     const payload = {
-      name: form.nombre,
-      status: form.estado,
+      name: form.name,
+      status: form.status,
     }
 
     try {
@@ -74,16 +72,16 @@ export default function EditarCategoria() {
   if (error) return <p className="text-red-500 text-center">{error}</p>
 
   return (
-    <div className="bg-gray-800 text-white shadow-md rounded p-6 max-w-xl mx-auto mt-10">
-      <h1 className="text-2xl font-bold mb-4 text-pink-600">Editar Categoría</h1>
+    <div className="bg-white text-gray-900 shadow-md rounded p-6 max-w-xl mx-auto mt-10">
+      <h1 className="text-2xl font-bold mb-4 text-gray-700">Editar Categoría</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <label className="block">
-          <span className="text-sm font-medium">Nombre</span>
+          <span className="text-sm font-medium text-gray-800">Nombre</span>
           <input
             type="text"
-            name="nombre"
-            value={form.nombre}
+            name="name"
+            value={form.name}
             onChange={handleChange}
             required
             className="w-full border px-3 py-2 rounded mt-1"
@@ -91,21 +89,21 @@ export default function EditarCategoria() {
         </label>
 
         <label className="block">
-          <span className="text-sm font-medium">Estado</span>
+          <span className="text-sm font-medium text-gray-800">Estado</span>
           <select
-            name="estado"
-            value={form.estado}
+            name="status"
+            value={form.status}
             onChange={handleChange}
             className="w-full border px-3 py-2 rounded mt-1"
           >
-            <option value="activo">Activo</option>
-            <option value="inactivo">Inactivo</option>
+            <option value="active">Activo</option>
+            <option value="inactive">Inactivo</option>
           </select>
         </label>
 
         <button
           type="submit"
-          className={`w-full ${loading ? 'bg-pink-300' : 'bg-pink-600 hover:bg-pink-700'} text-white py-2 rounded transition`}
+          className={`w-full ${loading ? 'bg-blue-300' : 'bg-pink-600 hover:bg-pink-700'} text-white py-2 rounded transition`}
           disabled={loading}
         >
           {loading ? 'Guardando...' : 'Guardar Cambios'}
